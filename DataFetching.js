@@ -34,9 +34,9 @@ function DataFetching() {
   useEffect(() => {
     getData()
   }, [offset])
-  const perPage = nav.pageSize;//Кол-во елементов на каждой страницы
+  const perPage = nav.pageSize / 10;//Кол-во елементов на каждой страницы
 
-  const pageCount = Math.ceil(nav.recordCount /  perPage);
+  const pageCount = Math.ceil(items.length /  (perPage));
 
   const currentPageItems = items
     .slice(offset, offset + perPage)
