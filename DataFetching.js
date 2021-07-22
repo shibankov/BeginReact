@@ -3,13 +3,14 @@ import React,{ useState,useEffect } from 'react'
 import ReactPaginate from 'react-paginate'
 
 function DataFetching() {
-  const [items,setItems] = useState([]);
-  const [nav,setNav] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
-  const [currentPage,setCurrentPage] = useState(1);
 
-  useEffect(() =>{
+  const [items,setItems] = useState([]);
+  const [nav,setNav] = useState([]);
+  const [offset, setOffset] = useState(0);
+
+  const getData = async() =>{
     fetch('https://pickcase.ua/bitrix/services/main/ajax.php?action=generator&model=iphone-x&page=2&c=diva:rest&mode=ajax&lang=ru?action=generator&model=iphone-x&c=diva:rest&mode=ajax&lang=ru')
       .then((res) => res.json())
       .then(
@@ -23,27 +24,28 @@ function DataFetching() {
           setError(error);
         }
       )
-  },[]);
+  };
 
-  // console.log(currentPage)
-  const PER_PAGE = 4;//Кол-во елементов на каждой страницы
-  const offset = currentPage * PER_PAGE;//Кол-во елементов который были отображены на предыдущих страницах
+  const handlePageClick = (e) =>{
+    const selectedPage = e.selected;
+    setOffset(selectedPage + 1)
+  };
 
-  const currentPageData = items
-    .slice(offset, offset + PER_PAGE)
+  useEffect(() => {
+    getData()
+  }, [offset])
+  const perPage = nav.pageSize;//Кол-во елементов на каждой страницы
+
+  const pageCount = Math.ceil(nav.recordCount /  perPage);
+
+  const currentPageItems = items
+    .slice(offset, offset + perPage)
     .map((item) =>
       <div key={item.id} className="card-list__item">
-        <img  src={item.img.[0].url} alt={item.name} loading="lazy"/>
+        <img  src={'https://pickcase.ua' + item.img.[0].url} alt={item.name} loading="lazy"/>
         <h3 >{item.name}</h3>
       </div>
     );
-
-  const pageCount = Math.ceil(items.length / PER_PAGE);
-
-
-  function handlePageClick({ selected: selectedPage }) {
-    setCurrentPage(selectedPage);
-  }
 
     if (error) {
       return <div>Ошибка: {error.message}</div>;
@@ -52,10 +54,9 @@ function DataFetching() {
     }
 
     return (
-
       <div>
         <ul className="card-list">
-          {currentPageData}
+          {currentPageItems}
         </ul>
         <ReactPaginate
           pageCount = {pageCount}
