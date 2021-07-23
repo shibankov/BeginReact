@@ -1,0 +1,49 @@
+ul
+  padding: 0
+li
+  list-style: none
+  &:not(:last-child)
+.card-list
+  display: flex
+  justify-content: space-between
+  flex-wrap: wrap
+  padding: 16px
+  &__item
+    display: flex
+    flex-direction: column
+    width: 49%
+    & > img
+      width: 100%
+      max-width: 300px
+    & > h3
+      text-transform: uppercase
+    & > p
+.pagination
+  display: flex
+  align-items: center
+  cursor: pointer
+  .previous
+    margin-right: 16px
+  li
+    border-radius: 5px
+    border: 1px solid transparent
+    &:not(:last-child)
+      margin-right: 16px
+    & > a
+      display: flex
+      align-items: center
+      justify-content: center
+      padding: 10px
+  &__link
+
+    overflow: hidden
+    font-weight: bold
+
+    &-active
+      color: #fff
+      background: #6c7ac9
+    &-disabled
+      color: rgb(198, 197, 202)
+      border: 1px solid rgb(198, 197, 202)
+
+
